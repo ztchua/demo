@@ -12,11 +12,21 @@ fetchExpenses();
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    // Handle date formatting for datetime-local input
+    const dateInput = document.getElementById('date').value;
+    let dateValue;
+    if (dateInput) {
+        // datetime-local returns "YYYY-MM-DDTHH:mm" - convert to ISO format
+        dateValue = new Date(dateInput).toISOString();
+    } else {
+        dateValue = new Date().toISOString();
+    }
+
     const data = {
         description: document.getElementById('description').value,
         amount: parseFloat(document.getElementById('amount').value),
         category: document.getElementById('category').value,
-        date: document.getElementById('date').value || new Date().toISOString()
+        date: dateValue
     };
 
     const id = document.getElementById('expenseId').value;
