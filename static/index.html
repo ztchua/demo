@@ -58,12 +58,305 @@
         .actions { display: flex; gap: 5px; }
         #formTitle { grid-column: 1 / -1; }
         .full-width { grid-column: 1 / -1; }
+
+        /* ============================================
+           ANIMATIONS
+           ============================================ */
+
+        /* --- Keyframe Definitions --- */
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes rowSlideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes rowDelete {
+            0% {
+                opacity: 1;
+                transform: translateX(0);
+                max-height: 100px;
+            }
+            50% {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(30px);
+                max-height: 0;
+                padding: 0;
+                border: none;
+            }
+        }
+
+        @keyframes highlightNew {
+            0% {
+                background-color: rgba(37, 99, 235, 0.2);
+                transform: scale(1.02);
+            }
+            100% {
+                background-color: transparent;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes emptyFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalShake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* --- Transitions --- */
+        button {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            will-change: transform;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.05s ease, box-shadow 0.05s ease;
+        }
+
+        input {
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+            border: 2px solid #ddd;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+            transform: scale(1.01);
+        }
+
+        input::placeholder {
+            transition: opacity 0.2s ease;
+        }
+
+        input:focus::placeholder {
+            opacity: 0.5;
+        }
+
+        .card {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideUp 0.6s ease-out forwards;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            border: 2px solid transparent;
+            will-change: transform, opacity;
+        }
+
+        .card:nth-of-type(2) {
+            animation-delay: 0.1s;
+        }
+
+        .card:nth-of-type(3) {
+            animation-delay: 0.25s;
+        }
+
+        tbody tr {
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            will-change: transform, opacity;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+            transform: scale(1.005);
+        }
+
+        /* --- Animation Trigger Classes --- */
+        .row-new {
+            animation: highlightNew 1s ease-out;
+        }
+
+        .row-deleting {
+            animation: rowDelete 0.4s ease-out forwards;
+            pointer-events: none;
+        }
+
+        .card.edit-mode {
+            border-color: #f59e0b;
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.2);
+            background: linear-gradient(to bottom, #fffbeb, white);
+        }
+
+        #formTitle {
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .edit-mode #formTitle {
+            color: #d97706;
+            transform: scale(1.02);
+        }
+
+        #cancelBtn {
+            opacity: 0;
+            transform: translateX(-10px) scale(0.9);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            display: inline-block !important;
+            pointer-events: none;
+        }
+
+        #cancelBtn.visible {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            pointer-events: auto;
+        }
+
+        /* --- Modal --- */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .modal-backdrop.visible {
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.8) translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .modal-backdrop.visible .modal {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .modal h3 { margin-top: 0; color: #dc2626; }
+        .modal p { color: #64748b; margin: 20px 0; }
+        .modal .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .modal.shake {
+            animation: modalShake 0.5s ease;
+        }
+
+        /* --- Empty State --- */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+            animation: emptyFadeIn 0.5s ease;
+        }
+
+        .empty-state::before {
+            content: '📝';
+            font-size: 48px;
+            display: block;
+            margin-bottom: 16px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* --- Toast Notifications --- */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            z-index: 1001;
+        }
+
+        .toast.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            background: #ef4444;
+        }
+
+        /* --- Skeleton Loading --- */
+        .skeleton-row {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            height: 48px;
+            border-radius: 4px;
+            margin: 8px 0;
+        }
+
+        /* --- Reduced Motion Support --- */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        h1 {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
     </style>
 </head>
 <body>
     <h1>Expense Tracker</h1>
 
-    <div class="card">
+    <div class="card card-form">
         <h2 id="formTitle">Add Expense</h2>
         <form id="expenseForm">
             <input type="hidden" id="expenseId">
@@ -78,7 +371,7 @@
         </form>
     </div>
 
-    <div class="card">
+    <div class="card card-table">
         <h2>Expenses</h2>
         <table>
             <thead>
@@ -92,6 +385,18 @@
             </thead>
             <tbody id="expenseList"></tbody>
         </table>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-backdrop" id="deleteModal">
+        <div class="modal">
+            <h3>Delete Expense?</h3>
+            <p>This action cannot be undone.</p>
+            <div class="actions">
+                <button class="btn-secondary" id="modalCancel">Cancel</button>
+                <button class="btn-danger" id="modalConfirm">Delete</button>
+            </div>
+        </div>
     </div>
 
     <script src="app.js"></script>
