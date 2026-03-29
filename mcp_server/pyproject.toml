@@ -1,0 +1,11 @@
+[project]
+name = "utility-mcp-server"
+version = "0.1.0"
+description = "A utility MCP server for JSON CRUD operations"
+requires-python = ">=3.10"
+dependencies = [
+    "fastmcp>=0.1.0",
+]
+
+[project.scripts]
+utility-mcp-server = "utility_mcp_server:main"
