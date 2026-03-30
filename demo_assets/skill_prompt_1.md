@@ -1,0 +1,1 @@
+Checkout to a separate branch and update the frontend of this project using mcp magic and frontend-design skills
