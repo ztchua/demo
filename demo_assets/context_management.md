@@ -1,0 +1,3 @@
+- Show context management window
+- Code repository explanation
+    - Clear context example
